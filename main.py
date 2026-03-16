@@ -3,21 +3,22 @@ from tkinter import ttk, messagebox
 import asyncio
 import edge_tts
 import threading
-import pygame # Used to play the sound once generated
-
-# Initialize pygame mixer for audio playback
-pygame.mixer.init()
+from playsound import playsound  # Replace pygame with this
+import os
 
 async def generate_and_play(text, voice_name):
     output_file = "speech_output.mp3"
     try:
-        # This part talks to Microsoft's servers to get the high-quality voice
         communicate = edge_tts.Communicate(text, voice_name)
         await communicate.save(output_file)
-        
-        # Play the resulting file
-        pygame.mixer.music.load(output_file)
-        pygame.mixer.music.play()
+
+        # Use playsound instead of pygame mixer
+        playsound(output_file)
+
+        # Clean up the file after playing if you want
+        # os.remove(output_file)
+    except Exception as e:
+        messagebox.showerror("Error", f"Something went wrong: {e}")
     except Exception as e:
         messagebox.showerror("Error", f"Something went wrong: {e}")
 
